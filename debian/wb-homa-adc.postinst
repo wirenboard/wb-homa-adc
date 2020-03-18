@@ -44,6 +44,7 @@ fi
 
 
 ucf --debconf-ok /usr/share/wb-homa-adc/wb-homa-adc.conf.$BOARD_CONF $CONFFILE
+systemctl enable wb-homa-adc.service
 
 #DEBHELPER#
 

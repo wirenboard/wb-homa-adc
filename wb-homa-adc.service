@@ -1,0 +1,20 @@
+[Unit]
+Description=MQTT Driver for ADC
+After=network.target
+Requires=mosquitto.service
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=5
+User=root
+Group=root
+PIDFile=/var/run/wb-homa-adc.pid
+EnvironmentFile=/etc/wb-homa-adc.env
+ExecStartPre=/usr/lib/wb-homa-adc/wb-homa-adc.sh
+ExecStart=/usr/bin/wb-homa-adc -c ${CONFFILE}
+KillSignal=SIGINT
+SyslogIdentifier=wb-homa-adc
+
+[Install]
+WantedBy=multi-user.target

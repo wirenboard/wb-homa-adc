@@ -195,10 +195,15 @@ std::unique_ptr<TSysfsAdcChannel> TSysfsAdc::GetChannel(int i)
 
 int TSysfsAdc::ReadValue()
 {
-    int val;
-    AdcValStream.seekg(0);
-    AdcValStream >> val;
-    return val;
+    try {
+        int val;
+        AdcValStream.seekg(0);
+        AdcValStream >> val;
+        return val;
+    } catch (const std::ios_base::failure e) {
+        throw -1;
+    }
+    
 }
 
 bool TSysfsAdc::CheckVoltage(int value)
@@ -335,8 +340,12 @@ int TSysfsAdcChannel::GetAverageValue()
     if (!d->Ready) {
         for (int i = 0; i < d->ChannelAveragingWindow; ++i) {
             d->Owner->SelectMuxChannel(d->Index);
-            int v = d->Owner->ReadValue();
-
+            int v;
+            try {
+                v = d->Owner->ReadValue();
+            } catch(int e) {
+                throw -1;
+            }
             d->Buffer[i] = v;
             d->Sum += v;
         }
@@ -344,7 +353,12 @@ int TSysfsAdcChannel::GetAverageValue()
     } else {
         for (int i = 0; i < d->ReadingsNumber; i++) {
             d->Owner->SelectMuxChannel(d->Index);
-            int v = d->Owner->ReadValue();
+            int v;
+            try {
+                v = d->Owner->ReadValue();
+            } catch(int e) {
+                throw -1;
+            }
             d->Sum -= d->Buffer[d->Pos];
             d->Sum += v;
             d->Buffer[d->Pos++] = v;
@@ -363,7 +377,12 @@ const std::string& TSysfsAdcChannel::GetName() const
 float TSysfsAdcChannel::GetValue()
 {
     float result = std::nan("");
-    int value = GetAverageValue();
+    int value;
+    try {
+        value = GetAverageValue();
+    } catch(int e) {
+        throw -1;
+    }
     if (value < ADC_VALUE_MAX) {
         if (d->Owner->CheckVoltage(value)) {
             result = (float) value * Multiplier / 1000; // set voltage to V from mV
@@ -414,7 +433,12 @@ float TSysfsAdcChannelRes::GetValue()
         this_thread::sleep_for(chrono::milliseconds(DELAY));
     }
     
-    int value = GetAverageValue(); 
+    int value;
+    try {
+        value = GetAverageValue();
+    } catch(int e) {
+        throw -1;
+    } 
     float result = std::nan("");
     if (value < ADC_VALUE_MAX) {
         if (d->Owner->CheckVoltage(value)) {

@@ -1,3 +1,10 @@
+wb-homa-adc (1.14.7) stable; urgency=medium
+
+  * add systemd unit
+  * fix: crash when communication with the module is lost
+
+ -- Yan Yanin <ianin@wirenboard.ru>  Wed, 04 Mar 2020 17:27:24 +0300
+
 wb-homa-adc (1.14.6) stable; urgency=medium
 
   * fix analog-inputs node autodetect on create_rootfs stage

@@ -63,8 +63,12 @@ install: all
 	install -d $(DESTDIR)/usr/lib
 	install -d $(DESTDIR)/usr/share/wb-homa-adc
 	mkdir -p $(DESTDIR)/etc/wb-configs.d
+	mkdir -p $(DESTDIR)/usr/lib/wb-homa-adc
 
 	install -m 0755  $(ADC_BIN) $(DESTDIR)/usr/bin/$(ADC_BIN)
+	install -m 0755  wb-homa-adc.sh $(DESTDIR)/usr/lib/wb-homa-adc/wb-homa-adc.sh
+	install -m 0755  wb-homa-adc.service $(DESTDIR)/etc/systemd/system/wb-homa-adc.service
+	install -m 0644  wb-homa-adc.env $(DESTDIR)/etc/wb-homa-adc.env
 	install -m 0644  config.json $(DESTDIR)/usr/share/wb-homa-adc/wb-homa-adc.conf.default
 	install -m 0644  config.json.devicetree $(DESTDIR)/usr/share/wb-homa-adc/wb-homa-adc.conf.devicetree
 	install -m 0644  config.json.wb4 $(DESTDIR)/usr/share/wb-homa-adc/wb-homa-adc.conf.wb4
